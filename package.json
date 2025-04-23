@@ -11,7 +11,7 @@
     "dev": "clear && cross-env NODE_ENV=development webpack serve --config webpack.dev.config.js",
     "start": "clear && webpack serve",
     "test": "clear && dotenv -e .env jest",
-    "prepublish": "yarn build",
+    "prepublish": "yarn build --mode production",
     "semantic-release": "semantic-release",
     "gaa": "git add -A",
     "gc:init": "git commit -m \"📦chore: init commit\"",
