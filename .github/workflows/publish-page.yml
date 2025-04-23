@@ -1,33 +1,40 @@
 name: Build the dist folder and publish to pages
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
+        strategy:
+            matrix:
+                node-version: [18.x, 20.x, 22.x]
 
-    steps:
-    - uses: actions/checkout@v4
+        steps:
+            - uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
 
-    - name: Build
-      env:
-          TERM: xterm
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          NPM_PERSONAL_ACCESS_TOKEN: ${{secrets.NPM_PERSONAL_ACCESS_TOKEN}}
-      run: |
-        yarn install --production
-        yarn add html-webpack-plugin
-        yarn build
+            - name: Install and Build
+              env:
+                  TERM: xterm
+                  NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                  NPM_PERSONAL_ACCESS_TOKEN: ${{secrets.NPM_PERSONAL_ACCESS_TOKEN}}
+              run: |
+                  yarn install --production
+                  yarn add html-webpack-plugin
+                  yarn build
+
+            - name: Deploy to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./dist  # Change this to your build output directory
+                  publish_branch: gh-pages  # The branch to publish to
