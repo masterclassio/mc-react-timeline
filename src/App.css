@@ -1,0 +1,833 @@
+* {
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    color: white;
+    -webkit-font-smoothing: antialiased;
+    font-family: helvetica neue, helvetica, arial, san-serif;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    background: #353a42;
+    background: rgb(50 57 63 / 82%);
+}
+
+/** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  * @component VideoContainer.css
+  **/
+.VideoContainer{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1;
+}
+
+  /** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  * @component TimelineComponent.css
+  **/
+.TimelineComponent {
+    display: block;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 300px;
+    height: 100%;
+    height: auto;
+    z-index: 9999;
+    background: #32393f;
+    border-top: 1px solid rgba(0, 0, 0, .1);
+    box-shadow: 0 0 3px rgba(0, 0, 0, .2);
+}
+
+.droppableCanvas {
+    display: block;
+    width: 100%;
+    background-color: #32393f;
+}
+
+.droppableCanvas.isDraggingOver {
+    background-color: lightblue !important;
+}
+
+
+/**
+  * @component TimelineStepComponent.css
+  **/
+.TimelineStepComponent {
+    position: relative !important;
+    width: 100%;
+    display: block;
+    user-select: none;
+    padding: 0px 24px 20px;
+    margin: 0px 0px;
+    color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    border-top: 1px solid rgba(255, 255, 255, .1);
+    text-align: left;
+
+}
+
+.TimelineStepComponent.isDragging {
+    background-color: lightgreen !important;
+}
+
+.TimelineStepComponent.isNotDragging {
+    background-color: #32393f !important;
+    background-color: #454b56 !important;
+
+}
+
+
+.TimelineStepComponent_label {
+    display: block;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 4px 14px;
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 1);
+
+}
+
+.TimelineStepComponent_label>span {
+    display: inline-block;
+}
+
+.TimelineStepComponent_label>img {
+    width: 17px;
+    top: 5px;
+    position: relative;
+    margin-right: 9px;
+}
+
+.TimelineStepComponent_drag_handle {
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 12px;
+    height: 100%;
+    background: rgba(0, 0, 0, .1);
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    color: transparent;
+    font-size: 0px;
+    z-index: 2;
+}
+
+/**
+  * @feature Timeline row Droppable
+  **/
+.TimelineRow-Droppable {
+    display: block;
+    width: 100%;
+}
+
+.TimelineRow-Droppable.isDraggingOver {
+    background-color: rgba(48, 50, 55, 0.7) !important;
+}
+
+.TimelineRow-Droppable.isNotDraggingOver {
+    background-color: #35383d;
+}
+
+/**
+  * @feature Timeline row Draggable
+  **/
+.TimelineRow-dragcontainer {
+    display: block;
+    position: relative;
+    box-shadow: inset 0 -1px #41444a;
+    font-family: Helvetica Neue;
+    font-size: 12px;
+    color: #fff;
+    border-top: 1px solid rgba(255, 255, 255, .031);
+}
+
+.TimelineRow-dragger {
+    display: block;
+
+    overflow: hidden;
+    transition: height .4s, max-height .4s !important;
+
+    user-select: none;
+    padding: 10px;
+    margin: 0px;
+
+    width: 100%;
+
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    box-sizing: border-box;
+}
+
+.TimelineRow-dragger.draggableNotOpen {
+    height: 60px;
+    min-height: 60px;
+    max-height: 60px;
+}
+
+.TimelineRow-dragger.draggableOpen {}
+
+[data-timeline="Notepad"].draggableOpen {
+    height: 360px !important;
+    max-height: 360px !important;
+}
+
+[data-timeline="Code"].draggableOpen {
+    height: 380px !important;
+    max-height: 380px !important;
+}
+
+[data-timeline="Test"].draggableOpen {
+    height: 380px !important;
+    max-height: 380px !important;
+}
+
+[data-timeline="Terminal"].draggableOpen {
+    height: 360px !important;
+    max-height: 360px !important;
+}
+
+.TimelineRow-dragger.isDragging {
+    background: #35383d;
+    filter: hue-rotate(0deg);
+}
+
+.TimelineRow-dragger.isNotDragging {
+    background: #35383d;
+    filter: hue-rotate(0deg);
+}
+
+
+/**
+  * @feature Drag Handle 
+  **/
+.TimelineRow-drag_handle {
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 12px;
+    height: 100%;
+    background: rgba(0, 0, 0, .3);
+    border-right: 1px solid rgba(0, 0, 0, .01);
+    color: transparent;
+    font-size: 0px;
+    z-index: 2;
+}
+
+
+
+
+/**
+  * @feature Timeline row - Left hand side 
+  **/
+.TimelineRow-left {
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 13px;
+    width: 207px;
+    height: 100%;
+    background: rgba(0, 0, 0, .2);
+    border-right: 1px solid rgba(255, 255, 255, .1);
+    z-index: 2;
+    line-height: 72px;
+    text-indent: 10px;
+}
+
+.TimelineRow-left_header {
+    display: block;
+    height: 60px;
+    width: 100%;
+    position: relative;
+}
+
+.TimelineRow-left_header_txt {
+    font-weight: 500;
+    position: absolute;
+    display: block;
+    top: 0px;
+    font-size: 13px;
+    left: 40px;
+    padding-top: 13px;
+    line-height: 12px;
+}
+
+.TimelineRow-left_header_txt>span {
+    line-height: 20px;
+}
+
+.TimelineRow-time_range {
+    padding: 0px;
+    line-height: 10px;
+    margin: 0px;
+    bottom: 14px;
+    left: 0px;
+    width: 100%;
+    display: block;
+    font-size: 10px;
+    opacity: .7;
+}
+
+/**
+      * @feature Button expand 
+      **/
+button.btnExpandTimeline {
+    display: block;
+    top: 0px;
+    right: 0px;
+    height: 100%;
+    width: 21px;
+    position: absolute;
+    border: 0px;
+    border-left: 1px solid rgba(255, 255, 255, .03);
+    background: transparent;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+button.btnExpandTimeline:hover {
+    background-color: rgba(0, 0, 0, .05);
+}
+
+.btnExpandTimeline span.carat {
+    top: calc(50% - 1px);
+    right: 6px;
+    opacity: .7;
+
+    transform: scale(.8) rotate(90deg);
+
+
+
+    position: absolute;
+    height: 0;
+    width: 0;
+    border: 5px solid transparent;
+    border-color: #fff transparent transparent;
+    transform-origin: center center;
+
+    top: calc(50% - 5px);
+
+    transition: transform .2s, top .2s;
+}
+
+.draggableOpen .btnExpandTimeline .carat {
+    transform: scale(.8);
+    top: calc(50% - 1px);
+}
+
+
+.TimelineRow-left .bubble {
+    margin-top: 0px;
+    border-bottom: 0px;
+    height: calc(100% - 60px);
+    margin-left: 0px;
+    width: 100%;
+    border-right: 0px;
+}
+
+
+/**
+  * @feature TimelineRow-row_timeline 
+  * @description the actual timeline row 
+  **/
+.TimelineRow-row_timeline {
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 220px;
+    width: calc(100% - 200px);
+    height: 100%;
+    background: rgba(0, 0, 0, .1);
+    box-sizing: border-box;
+    padding: 10px;
+    padding-left: '0px'
+}
+
+
+
+/**
+  * @feature Timeline row - Right hand side 
+  **/
+.bubble {
+    display: none;
+    width: 100%;
+    margin-top: 10px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    height: calc(100% - 40px);
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, .1);
+    box-sizing: border-box;
+    padding: 20px;
+    margin-left: -10px;
+    border-left: 0px;
+    border-bottom: 0px;
+    transition: all .4s;
+}
+
+[data-timeline="Notepad"] .bubble {
+    background: rgba(203, 129, 69, 0.04);
+    background: rgba(57, 139, 244, 0.04);
+}
+
+[data-timeline="Code"] .bubble {
+    background: rgba(0, 120, 200, 0.04);
+}
+
+[data-timeline="Test"] .bubble {
+    background: rgba(64, 156, 69, 0.03);
+}
+
+[data-timeline="Terminal"] .bubble {
+    background: rgba(203, 129, 69, 0.04);
+}
+
+.draggableOpen .bubble {
+    display: block !important;
+}
+
+.bubble>textarea {
+    background: transparent;
+    width: 509px;
+    height: 162px;
+    border: 0px;
+    color: white;
+    font-family: "courier new";
+    font-size: 14px;
+    padding: 10px;
+    outline: none !important;
+    margin: 0px;
+    box-shadow: inset 1px 1px 5px rgba(0, 0, 0, .3);
+    border: 1px solid rgba(255, 255, 255, .1);
+    background: rgba(0, 0, 0, .2);
+}
+
+
+
+/**
+  * @feature Btn List Code Panel 
+  **/
+.timelinerow-tab-btn-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button.timelinerow-tab-btn {
+    display: block;
+    width: 90px;
+    height: 90px;
+    margin-bottom: 10px;
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    background-color: transparent;
+    cursor: pointer;
+    opacity: .9;
+    filter: saturate(0.1);
+    transition: opacity .2s, filter .2s;
+
+}
+
+button.timelinerow-tab-btn.active,
+button.timelinerow-tab-btn:hover {
+    opacity: 1;
+    filter: saturate(1);
+    /*border-color: #3380e1;*/
+}
+
+[data-timeline="Notepad"] button.timelinerow-tab-btn.active,
+[data-timeline="Notepad"] button.timelinerow-tab-btn:hover {
+    border-color: rgba(248, 201, 14, 0.25);
+}
+
+[data-timeline="Code"] button.timelinerow-tab-btn.active,
+[data-timeline="Code"] button.timelinerow-tab-btn:hover {
+    border-color: #3380e1;
+}
+
+[data-timeline="Test"] button.timelinerow-tab-btn.active,
+[data-timeline="Test"] button.timelinerow-tab-btn:hover {
+    border-color: rgba(76, 175, 80, 0.8);
+}
+
+
+button.timelinerow-tab-btn:before {
+    display: block;
+    content: '';
+    width: 10px;
+    height: 10px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-right: 0px;
+    border-top: 0px;
+    top: calc(50% - 10px);
+    position: absolute;
+    left: -12px;
+    transition: all .2s;
+}
+
+.straightline button.timelinerow-tab-btn:before {
+    width: 1px;
+    height: 10px;
+    /*border-left: 1px solid rgba(255,255,255,.1);*/
+    border-right: 0px;
+    border-top: 0px;
+    border-bottom: 0px;
+    top: calc(0% - 11px);
+    left: calc(50% - 0px);
+}
+
+button.timelinerow-tab-btn:nth-of-type(1):before {
+    height: 20px;
+    top: -21px;
+}
+
+[data-timeline="Notepad"] button.timelinerow-tab-btn.active:before,
+[data-timeline="Notepad"] button.timelinerow-tab-btn:hover:before {
+    border-color: rgba(247, 215, 88, 0.1);
+}
+
+[data-timeline="Code"] button.timelinerow-tab-btn.active:before,
+[data-timeline="Code"] button.timelinerow-tab-btn:hover:before {
+    border-color: rgba(51, 128, 225, 0.4);
+}
+
+[data-timeline="Test"] button.timelinerow-tab-btn.active:before,
+[data-timeline="Test"] button.timelinerow-tab-btn:hover:before {
+    border-color: rgba(69, 150, 76, 0.5);
+}
+
+
+button.timelinerow-tab-btn img {
+    display: block;
+    width: 40px;
+    position: absolute;
+
+    left: calc(50% - 20px);
+}
+
+[data-timeline="Notepad"] button.timelinerow-tab-btn img {
+    top: 12px;
+    width: 45px;
+    left: 22px;
+}
+
+[data-timeline="Code"] button.timelinerow-tab-btn img {
+    top: 7px;
+}
+
+[data-timeline="Test"] button.timelinerow-tab-btn img {
+    top: 10px;
+    width: 45px;
+    left: 22px;
+}
+
+button.timelinerow-tab-btn span {
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    line-height: 20px;
+    height: 20px;
+    border-top: 1px solid rgba(255, 255, 255, .051);
+    color: white;
+    text-align: center;
+    font-size: 9px;
+    font-weight: 500;
+    transition: all .2s;
+}
+
+[data-timeline="Notepad"] button.timelinerow-tab-btn.active span,
+[data-timeline="Notepad"] button.timelinerow-tab-btn:hover span {
+    background: rgba(248, 201, 13, 0.03);
+}
+
+[data-timeline="Code"] button.timelinerow-tab-btn.active span,
+[data-timeline="Code"] button.timelinerow-tab-btn:hover span {
+    background: rgba(51, 128, 225, 0.1);
+}
+
+[data-timeline="Test"] button.timelinerow-tab-btn.active span,
+[data-timeline="Test"] button.timelinerow-tab-btn:hover span {
+    background: rgba(76, 175, 80, 0.06);
+}
+
+
+
+/**
+  * @feature Code Panel - Expanded row 
+  **/
+section.timeline-tabs {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+section.timeline-tab-panel {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform: translate(100vw);
+    transition: transform 400ms ease-in-out;
+
+    /**
+      @todo fix max width 
+      **/
+    max-width: 621px;
+}
+
+/**
+      * @feature Code Tabs 
+      **/
+[data-note-tab="notepad"] [data-note-tab="notepad"] {
+    transform: translate(0vw) !important;
+}
+
+[data-note-tab="config"] [data-note-tab="config"] {
+    transform: translate(0vw) !important;
+}
+
+/**
+      * @feature Code Tabs 
+      **/
+[data-code-tab="template"] [data-code-tab="template"] {
+    transform: translate(0vw) !important;
+}
+
+[data-code-tab="data"] [data-code-tab="data"] {
+    transform: translate(0vw) !important;
+}
+
+[data-code-tab="config"] [data-code-tab="config"] {
+    transform: translate(0vw) !important;
+}
+
+/**
+      * @feature Test Tabs 
+      **/
+[data-test-tab="template"] [data-test-tab="template"] {
+    transform: translate(0vw) !important;
+}
+
+[data-test-tab="data"] [data-test-tab="data"] {
+    transform: translate(0vw) !important;
+}
+
+[data-test-tab="config"] [data-test-tab="config"] {
+    transform: translate(0vw) !important;
+}
+
+/**
+      * @feature Cli Tabs 
+      **/
+[data-cli-tab="cli"] [data-cli-tab="cli"] {
+    transform: translate(0vw) !important;
+}
+
+[data-cli-tab="config"] [data-cli-tab="config"] {
+    transform: translate(0vw) !important;
+}
+
+/**
+  * @component Timelines seperators 
+  * @deprecated moved 
+  **/
+/*
+  .draggable-inner:hover .timeline-dividers-row{
+      opacity: 1;
+  }
+  .timeline-dividers-row{
+      
+      transition: opacity 1s;
+      display: block;
+      position: absolute;
+      top: 0px;
+      width: 100%;
+      height: 60px;
+      overflow-x: scroll;
+      overflow-y: hidden;
+      z-index: 1;
+      box-sizing: border-box;
+      padding: 10px 0px;
+      padding-left: 0px;
+      opacity: .5;
+      opacity: 0;
+      z-index: 1;
+  }
+  .time-100ms {
+      float: left;
+      display: block;
+      width: 9px;
+      height: 100%;
+      border-right: 1px solid rgba(255,255,255,.051);
+      top: 0px;
+      position: relative;
+  }
+  .time-100ms:nth-of-type(4n ){
+      border-right: 1px solid rgba(255,255,255,.15);
+      height: calc(100% + 10px);
+      top: -5px;
+  }
+  .time-100ms:before{
+      content: attr(data-time);
+      position: absolute;
+      top: 0px;
+      right: 2px;
+      font-size: 6px;
+      opacity: 0;
+      display: none;
+  
+  }
+  .time-100ms:nth-of-type(20n ):before{
+      opacity: 1;
+      display: block;
+      font-weight: bold;
+  }
+  */
+
+/** ---------------------
+  * @component TimelineBar
+  */
+/**
+  * @component TimelineBar 
+  **/
+.TimelineComponent {}
+
+/**
+  * @features Timeline Bar - seperators 
+  **/
+.draggable-inner:hover .timeline-dividers-row {
+    opacity: 1;
+}
+
+.timeline-dividers-row {
+
+    transition: opacity 1s;
+    display: block;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 60px;
+    /* outline: 1px solid; */
+    overflow-x: scroll;
+    overflow-y: hidden;
+    z-index: 1;
+    box-sizing: border-box;
+    padding: 10px 0px;
+    padding-left: 0px;
+    opacity: .5;
+    opacity: 0;
+    z-index: 1;
+}
+
+.time-100ms {
+    float: left;
+    display: block;
+    width: 9px;
+    height: 100%;
+    border-right: 1px solid rgba(255, 255, 255, .051);
+    top: 0px;
+    position: relative;
+}
+
+.time-100ms:nth-of-type(4n) {
+    border-right: 1px solid rgba(255, 255, 255, .15);
+    height: calc(100% + 10px);
+    top: -5px;
+}
+
+.time-100ms:before {
+    content: attr(data-time);
+    position: absolute;
+    top: 0px;
+    right: 2px;
+    font-size: 6px;
+    opacity: 0;
+    display: none;
+
+}
+
+.time-100ms:nth-of-type(20n):before {
+    opacity: 1;
+    display: block;
+    font-weight: bold;
+}
+
+/* 
+  
+  timeline bar
+  
+  
+  */
+/* timeline-bar.css
+     ------------------------------------------------------------------------
+     Base styling for every timeline bar plus hue / gradient overrides
+     for each content‑type variant.
+  */
+
+/* ─── Core bar look & feel ─────────────────────────────────────────────── */
+.timeline-bar {
+    /* positioning / sizing */
+    position: relative;
+    left: 100px;
+    /* default offset – tweak per instance if needed */
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+
+    /* box model / decoration */
+    display: block;
+    z-index: 2;
+    border-radius: 2px;
+    border: 1px solid rgba(221, 221, 221, 0.5);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+
+    /* typography */
+    line-height: 40px;
+    /* vertically centers the text */
+    text-indent: 20px;
+    font: 12px/1 "Helvetica Neue", Arial, sans-serif;
+    color: rgba(255, 255, 255, 0.9);
+
+    /* default colour (green) */
+    background: linear-gradient(rgb(76, 175, 80), rgb(56, 142, 60)) rgba(0, 0, 0, 0.3);
+    filter: hue-rotate(0deg);
+    /* will be tweaked per variant */
+}
+
+/* ─── Variants (Notepad / Code / Test / Terminal) ──────────────────────── */
+/* 1. Notepad → yellow via 270° hue rotation */
+.timeline-bar--notepad {
+    filter: hue-rotate(270deg);
+}
+
+/* 2. Code → blue‑cyan via hue + saturation boost */
+.timeline-bar--code {
+    filter: hue-rotate(100deg) saturate(1.5);
+}
+
+/* 3. Test → inherits the base green (explicitly set here for clarity) */
+.timeline-bar--test {
+    filter: hue-rotate(0deg);
+}
+
+/* 4. Terminal → dark grey gradient, no hue shift needed */
+.timeline-bar--terminal {
+    background: linear-gradient(rgb(87, 87, 87), rgb(74, 74, 74)) rgba(0, 0, 0, 0.3);
+    filter: hue-rotate(0deg);
+}
