@@ -31,7 +31,6 @@
     "@emotion/css": "^11.9.0",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
-    "@masterclassio/models": "^1.0.2",
     "@types/node": "^17.0.43",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
