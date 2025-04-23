@@ -35,9 +35,10 @@ jobs:
                   yarn install --production
                   yarn add html-webpack-plugin
                   yarn build
+                  mv dist docs
 
             - name: List dist directory
-              run: ls -la ./dist 
+              run: ls -la ./docs 
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v3
