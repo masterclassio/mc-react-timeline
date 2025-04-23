@@ -28,5 +28,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
           NPM_PERSONAL_ACCESS_TOKEN: ${{secrets.NPM_PERSONAL_ACCESS_TOKEN}}
       run: |
-        npm install
-        npm build
+        yarn install --production
+        yarn build
